@@ -1,5 +1,9 @@
+# Installing & loading the necessary packages:
+
 install.packages("tidyverse")
 library(tidyverse)
+
+# Uploading the datasets:
 
 deliveries <- read_csv("deliveries.csv")
 matches <- read_csv("matches.csv")
@@ -10,7 +14,10 @@ matches <- read_csv("matches.csv")
 # Most successful players
 # Factors contributing win or loss of a team
 
+# Pre-exploratory analysis of the datasets:
+
 dim(deliveries)
+dim(matches)
 
 table(deliveries$batting_team)             # Has error in Rising Pune Supergiants
 
@@ -26,20 +33,6 @@ table(matches$team2)                         # Has error in Rising Pune Supergia
 table(matches$toss_winner)                   # Has error in Rising Pune Supergiants
 table(matches$result)
 table(matches$umpire3)
-
-# Trimming the leading and trailing whitespaces from all the columns of both the dataframes:
-
-deliveries_v2 <- data.frame(lapply(deliveries, trimws))
-matches_v2 <- data.frame(lapply(matches, trimws))
-
-# Removing the duplicates from both the dataframes:
-
-library(dplyr)
-
-distinct(deliveries_v2)
-distinct(matches_v2)
-
-View(matches_v2)
 
 # Renaming the teams to their short forms:
 
@@ -76,12 +69,19 @@ deliveries_v2[deliveries_v2 == "Rising Pune Supergiants"] <- "RPS"
 deliveries_v2[deliveries_v2 == "Royal Challengers Bangalore"] <- "RCB"
 deliveries_v2[deliveries_v2 == "Sunrisers Hyderabad"] <- "SRH"
 
-# Getting count of missing values of all columns of both the dataframes:
+# Cleaning the data:
 
-sapply(deliveries_v2, function(x) sum(is.na(x)))
+deliveries_v2 <- data.frame(lapply(deliveries, trimws))
+matches_v2 <- data.frame(lapply(matches, trimws))
 
-sapply(matches_v2, function(x) sum(is.na(x)))
+# Removing the duplicates from both the dataframes:
 
+library(dplyr)
+
+distinct(deliveries_v2)
+distinct(matches_v2)
+
+View(matches_v2)
 
 # Removing umpire 3 data from matches dataset and player's dismissed, dismissal_kind, fielder from deliveries dataset:
 
@@ -90,27 +90,16 @@ deliveries_v3 <- deliveries_v2 %>%
          
 matches_v3 <- matches_v2 %>% 
   select(-c("umpire3"))         
-         
-         
+                 
 matches_v3[!(is.na(matches_v3$winner) | matches_v3$winner=="" | is.na(matches_v3$player_of_match) | matches_v3$player_of_match==""|is.na(matches_v3$umpire1) | matches_v3$umpire1=="" | is.na(matches_v3$umpire2) | matches_v3$umpire2==""),]          
 
 matches_v4 <- na.omit(matches_v3) # Method 1 - Remove NA
 matches_v4
 
 deliveries_v4 <- deliveries_v3
+    
+# Exporting the clean datasets:
 
-# Checking count of missing values of all columns of both the dataframes:
-
-sapply(deliveries_v4, function(x) sum(is.na(x)))
-
-sapply(matches_v4, function(x) sum(is.na(x)))
-         
-
-# So far:
-
-# Both the datasets have been trimmed, duplicate values have been removed, all the columns are in correct datatype and both the datasets have been thoroughly cleaned.
-
-         
 write.csv(matches_v4,"C:\\Users\\rohit\\Desktop\\Matches_v4.csv", row.names = TRUE)
 write.csv(deliveries_v4,"C:\\Users\\rohit\\Desktop\\Deliveries_v4.csv", row.names = TRUE)
 
