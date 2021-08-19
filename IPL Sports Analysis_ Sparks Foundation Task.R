@@ -98,7 +98,7 @@ matches_v4
 
 deliveries_v4 <- deliveries_v3
     
-# Exporting the clean datasets:
+# Exporting the cleaned datasets:
 
 write.csv(matches_v4,"C:\\Users\\rohit\\Desktop\\Matches_v4.csv", row.names = TRUE)
 write.csv(deliveries_v4,"C:\\Users\\rohit\\Desktop\\Deliveries_v4.csv", row.names = TRUE)
